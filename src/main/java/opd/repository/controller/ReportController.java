@@ -59,7 +59,7 @@ public class ReportController {
         smsService.checkMarks(studentList, lections);
     }
 
-    @GetMapping("getStudentReport")
+    @GetMapping("getstudentreport")
     String getStudentReport(@RequestParam String studentName, @RequestParam String reportTypeStr) throws StudentNotFoundException {
         Student student = modelMapper.map(studentRepository.findByName(studentName), Student.class);
         if (student == null) {
@@ -68,17 +68,17 @@ public class ReportController {
         }
         List<Lection> lections = lectionRepository.findAll().stream()
                 .map(x -> modelMapper.map(x, Lection.class)).toList();
-        return "<xmp>" + reportService.generateStudentReport(student, lections, ReportType.valueOf(reportTypeStr)) + "</xmp>";
+        return reportService.generateStudentReport(student, lections, ReportType.valueOf(reportTypeStr));
     }
 
-    @GetMapping("getLectionReport")
+    @GetMapping("getlectionreport")
     String getLectionReport(@RequestParam String lectionName, @RequestParam String reportTypeStr) throws LectionNotFoundException {
         Lection lection = modelMapper.map(lectionRepository.findByName(lectionName), Lection.class);
         if (lection == null) {
             log.error("Лекций {} не найдена!", lectionName);
             throw new LectionNotFoundException(lectionName);
         }
-        return "<xmp>" + reportService.generateLectionReport(lection, ReportType.valueOf(reportTypeStr)) + "</xmp>";
+        return reportService.generateLectionReport(lection, ReportType.valueOf(reportTypeStr));
     }
 
 }
